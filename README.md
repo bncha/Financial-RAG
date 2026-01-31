@@ -12,7 +12,7 @@
 ### 🧠 RAG Engine & User Experience
 A robust RAG (Retrieval-Augmented Generation) system built to parse and understand complex financial reports.
 - **Hybrid Retrieval:** Uses **Qdrant** for semantic search and **MongoDB** for metadata filtering.
-- **Interactive UX:** A clean, chat-based interface powered by **Gradio** and **LangGraph**, providing real-time feedback on the retrieval process (e.g., "Extracting info...", "Synthesizing answer...").
+- **Interactive UX:** A chat-based interface powered by **Gradio** and **LangGraph**, providing real-time feedback on the retrieval process (e.g., "Extracting info...", "Synthesizing answer...").
 
 ### 🔄 Production-Ready Pipelines
 Developed quality data worflow using **ZenML** pipelines
@@ -22,10 +22,9 @@ Developed quality data worflow using **ZenML** pipelines
 
 ### 🎨 Design
 Implementation based on a structured design process.
-> **[View Figma Workspace](#)**
->
-> ![Figma Design Preview](https://via.placeholder.com/800x400?text=Insert+Figma+Screenshot+Here)
-> *(Updates with actual screenshot soon)*
+> **[View Figma Workspace](https://www.figma.com/board/769clui85zxQvCIIRHuZsQ/shared-RAG-diagrams?node-id=0-1&t=e9hXxWyYOFi2ogd4-1)**
+
+![Figma workspace](images/workspace.png)
 
 ---
 
@@ -78,9 +77,6 @@ This project uses **Poetry** for dependency management.
 ```bash
 # Install dependencies
 poetry install
-
-# Activate the virtual environment
-poetry shell
 ```
 
 ### 3. Configure Environment Variables
@@ -99,8 +95,10 @@ Open `.env` and provide the following keys:
 ### 4. Running the Project
 Start the UI
 ```bash
-poetry run llm_project/langchain_ux.py
+poetry run ui
 ```
+To reduce the compute time of the data pipeline, this code only retrieves the first 10 documents. Make sure to check relevant questions in the HF dataset
+
 
 ### 5. Run ZenML Pipelines
 ```bash
@@ -108,5 +106,5 @@ poetry run zenml login --local
 poetry run etl
 poetry run fe
 poetry run eval
-poetry run zenml logout
+poetry run zenml logout 
 ```
