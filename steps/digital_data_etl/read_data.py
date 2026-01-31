@@ -22,7 +22,7 @@ def read_corpus(settings: Settings, name: Optional[str] = "corpus", split: Optio
 
     corpus_dataset = corpus_dataset.map(_get_year)
     corpus_dataset = corpus_dataset.map(_get_page)
-    corpus_dataset = corpus_dataset.select(range(2))
+    corpus_dataset = corpus_dataset.select(range(10))
 
     return corpus_dataset 
 

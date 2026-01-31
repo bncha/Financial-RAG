@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 @step 
 def generate_answers(dataset: Dataset) -> Dataset:
-    indices = range(2) 
+    indices = range(10) 
     small_dataset = dataset.select(indices)
     
     return small_dataset.map(_batch_prompt, batched=True, batch_size=10)
