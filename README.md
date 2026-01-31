@@ -55,8 +55,6 @@ Financial_RAG/
 ├── pipelines/           # ZenML pipeline definitions (ETL, Training, Eval)
 ├── steps/               # ZenML individual step implementations
 ├── run/                 # Execution scripts for triggering pipelines
-├── pyproject.toml       # Poetry dependency definitions
-└── .env                 # Environment variables
 ```
 
 ---
