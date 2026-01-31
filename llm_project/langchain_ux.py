@@ -1,5 +1,5 @@
 from langchain_core.messages import HumanMessage, AIMessage
-from graph_engine import app
+from llm_project.graph_engine import app
 import gradio as gr
 import json 
 
@@ -50,4 +50,10 @@ async def stream_chat(message, history):
     else:
         yield "⚠️ I processed the request but couldn't generate a structured answer. Please try again."
 
-demo = gr.ChatInterface(fn=stream_chat, type="messages").launch()
+
+def main():
+    demo = gr.ChatInterface(fn=stream_chat, type="messages")
+    demo.launch()
+
+if __name__ == "__main__":
+    main()

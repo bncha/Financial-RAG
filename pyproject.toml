@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "Personal Project"
 authors = ["bencha"]
 readme = "README.md"
-# package-mode = false
 
 [tool.poetry.dependencies]
 python = "~3.13"
@@ -14,21 +13,16 @@ pymongo = "^4.6.2"
 markdown2 = "^2.0"
 click = "^8.0.1"
 loguru = "^0.7.2"
-# rich = "^13.7.1"
 numpy = "^1.26.4"
 poethepoet = "0.29.0"
 duckdb="^1.4"
 datasets = "^3.0.1"
-# torch = "2.2.2"
-# python-dotenv= "^1.0"
+
 
 # Digital data ETL
 selenium = "^4.21.0"
-# webdriver-manager = "^4.0.1"
 beautifulsoup4 = "^4.12.3"
-# html2text = "^2024.2.26"
-# jmespath = "^1.0.1"
-# chromedriver-autoinstaller = "^0.6.4"
+
 
 # Feature engineering
 qdrant-client = "^1.8.0"
@@ -38,26 +32,16 @@ langchain_google_genai = "^4.0.0"
 sentence-transformers = "^3.0.0"
 
 # RAG
-# langchain-openai = "^0.1.3"
 google-genai = "^1.46.0"
-# jinja2 = "^3.1.4"
-# tiktoken = "^0.7.0"
-# fake-useragent = "^1.5.1"
 gradio = "^5.5.0"
-
-# Inference
-fastapi = "^0.115.2"
-uvicorn = "^0.30.6"
-opik = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poe.tasks]
-digital-data-etl = "python run.py"
-
-[dependency-groups]
-dev = [
-    "notebook (>=7.5.1,<8.0.0)"
-]
+[tool.poetry.scripts]
+# Format: executable_name = "package.module:function"
+ui = "llm_project.langchain_ux:main"
+etl = "run.run_etl:main"
+fe = "run.run_fe:main"
+eval = "run.run_eval:main"
