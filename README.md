@@ -21,7 +21,7 @@ Developed quality data worflow using **ZenML** pipelines
 - **Evaluation:** Continuous assessment of retrieval quality.
 
 ### 🎨 Design
-Implementation based on a structured design process.
+Implementation based on a structured design process (click here).
 > **[View Figma Workspace](https://www.figma.com/board/769clui85zxQvCIIRHuZsQ/shared-RAG-diagrams?node-id=0-1&t=e9hXxWyYOFi2ogd4-1)**
 
 <img src="images/workspace.png" alt="Figma workspace" width="300">
