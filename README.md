@@ -108,5 +108,5 @@ poetry run zenml login --local
 poetry run etl
 poetry run fe
 poetry run eval
-poetry run zenml logout 
+poetry run zenml logout
 ```
