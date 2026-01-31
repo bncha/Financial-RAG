@@ -1,8 +1,7 @@
-import click
+
 from config.settings import Settings
 from pipelines.digital_data_etl import digital_data_etl
 
-@click.command()
 def main():
     """
     Run the digital_data_etl pipeline.
@@ -11,7 +10,7 @@ def main():
     settings = Settings()
     
     # Run the pipeline
-    digital_data_etl(settings=settings)
+    digital_data_etl.with_options(enable_cache=False)(settings=settings)
 
 if __name__ == "__main__":
     main()
