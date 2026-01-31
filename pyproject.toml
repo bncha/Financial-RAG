@@ -17,11 +17,9 @@ poethepoet = "0.29.0"
 duckdb="^1.4"
 datasets = "^3.0.1"
 
-
 # Digital data ETL
 selenium = "^4.21.0"
 beautifulsoup4 = "^4.12.3"
-
 
 # Feature engineering
 qdrant-client = "^1.8.0"
