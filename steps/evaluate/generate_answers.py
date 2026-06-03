@@ -28,7 +28,14 @@ def _process_single(prompt: str) -> Dict:
 
     except Exception as e:
         logger.error(f"Error during chat processing: {e}", exc_info=True)
-        return {"logic_steps": "Error", "generated_response": "Error", "summary_sources": "Error", "sources": ["Error"]}
+        return {
+            "logic_steps": "Error", 
+            "generated_response": "Error", 
+            "summary_sources": "Error", 
+            "sources": ["Error"],
+            "retrieved_doc_ids": [],
+            "retrieved_doc_scores": []
+        }
 
 
 def _batch_prompt(batch) -> Dict:
@@ -41,6 +48,8 @@ def _batch_prompt(batch) -> Dict:
         "logic_steps": [r["logic_steps"] for r in results],
         "generated_response": [r["generated_response"] for r in results],
         "summary_sources": [r["summary_sources"] for r in results],
-        "sources": [r["sources"] for r in results]
+        "sources": [r["sources"] for r in results],
+        "retrieved_doc_ids": [r.get("retrieved_doc_ids") for r in results],
+        "retrieved_doc_scores": [r.get("retrieved_doc_scores") for r in results]
     }
     

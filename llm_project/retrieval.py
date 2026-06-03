@@ -168,7 +168,9 @@ class RetrievalService:
 
             final_docs.append({
                 "markdown_content": doc["markdown_content"],
-                "source": doc["exact_filename"]
+                "source": doc["exact_filename"],
+                "corpus_id": doc["corpus_id"],
+                "score": doc["rerank_score"]
             })
         logger.info(f"END OF RETRIEVAL PROCESS")
         return final_docs

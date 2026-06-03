@@ -69,9 +69,9 @@ class RouteDecision(BaseModel):
     )
 
 
-class FinalOutput(BaseModel):
+class LLMFinalOutput(BaseModel):
     """
-    The finalized, production-ready response delivered to the end-user.
+    The output fields generated directly by the language model.
     """
 
     logic_steps: str = Field(
@@ -85,6 +85,19 @@ class FinalOutput(BaseModel):
     )
     sources: List[str] = Field(
         description="List of document identifiers or PDF names utilized to derive the answer."
+    )
+
+class FinalOutput(LLMFinalOutput):
+    """
+    The finalized, production-ready response delivered to the end-user.
+    """
+    retrieved_doc_ids: Optional[List[int]] = Field(
+        default=None,
+        description="The exact document IDs retrieved by the RAG."
+    )
+    retrieved_doc_scores: Optional[List[float]] = Field(
+        default=None,
+        description="The likelihood or rerank scores of the retrieved documents."
     )
 
 class CleanDocument(Dict):
@@ -104,6 +117,7 @@ class AgentState(MessagesState):
     year_match: Optional[int]
     context_aware_query: str
     final_output: FinalOutput
+    retrieved_docs_metadata: Optional[List[Dict[str, Any]]]
 
 # --- 3. TOOLS (Logic Only) ---
 
@@ -199,9 +213,12 @@ def retrieve_node(state: AgentState) -> Dict[str, Any]:
     }) 
 
     context_parts = []
+    retrieved_docs_metadata = []
     for i, doc in enumerate(retrieved_data):
         content = doc.get("markdown_content")
         source = doc.get("source")
+        corpus_id = int(doc.get("corpus_id")) if doc.get("corpus_id") is not None else None
+        score = float(doc.get("score")) if doc.get("score") is not None else None
         
         formatted_doc = (
             f"<document index='{i+1}'>\n"
@@ -210,6 +227,11 @@ def retrieve_node(state: AgentState) -> Dict[str, Any]:
             f"</document>"
         )
         context_parts.append(formatted_doc)
+
+        retrieved_docs_metadata.append({
+            "corpus_id": corpus_id,
+            "score": score
+        })
 
     final_context_str = "\n\n".join(context_parts)
     
@@ -222,7 +244,10 @@ def retrieve_node(state: AgentState) -> Dict[str, Any]:
         tool_call_id=uuid.uuid4() 
     )
     
-    return {"retrieved_context": tool_msg}
+    return {
+        "retrieved_context": tool_msg,
+        "retrieved_docs_metadata": retrieved_docs_metadata
+    }
 
 
 def get_system_prompt(is_financial: bool, needs_retrieval: bool) -> str:
@@ -250,7 +275,7 @@ def generate_answer(state: AgentState) -> Dict[str, Any]:
     Final synthesis node that generates a structured response using dynamic prompting.
     """
 
-    structured_llm = llm.with_structured_output(FinalOutput)
+    structured_llm = llm.with_structured_output(LLMFinalOutput)
     
     tool_messages = state.get("retrieved_context", [])
 
@@ -267,10 +292,23 @@ def generate_answer(state: AgentState) -> Dict[str, Any]:
 
     user_query = human_messages[-1].content
 
-    response = structured_llm.invoke([
+    llm_response = structured_llm.invoke([
         SystemMessage(content=system_prompt),
         HumanMessage(content=f"Context:\n{context_str}\n\n Real Question: {user_query}, Context Aware Question (rephrased): {state.get('context_aware_query', '')}")
     ])
+
+    retrieved_docs_metadata = state.get("retrieved_docs_metadata") or []
+    doc_ids = [d["corpus_id"] for d in retrieved_docs_metadata if d.get("corpus_id") is not None]
+    doc_scores = [d["score"] for d in retrieved_docs_metadata if d.get("score") is not None]
+
+    response = FinalOutput(
+        logic_steps=llm_response.logic_steps,
+        generated_response=llm_response.generated_response,
+        summary_sources=llm_response.summary_sources,
+        sources=llm_response.sources,
+        retrieved_doc_ids=doc_ids,
+        retrieved_doc_scores=doc_scores
+    )
 
     history_text = f"Answer: {response.generated_response}\n Rational: {response.logic_steps}\n Sources Summary: {response.summary_sources}\n Sources: {', '.join(response.sources)}"
     ai_msg = AIMessage(content=history_text)

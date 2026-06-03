@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 class EvaluationDocument(BaseModel):
     query_id: int
@@ -15,3 +15,5 @@ class EvaluationDocument(BaseModel):
     logic_steps: str 
     summary_sources: str
     sources: List[str] 
+    retrieved_doc_ids: Optional[List[int]] = None
+    retrieved_doc_scores: Optional[List[float]] = None 
